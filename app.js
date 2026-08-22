@@ -1,26 +1,44 @@
 (() => {
   const STORAGE_KEY = 'mnst.questcalc.web.quests.v1';
   const MAX_SEARCH_CONSTRAINTS = 5;
+  const QUEST_TYPES = [
+    { id: 'normal', label: 'ノマ' },
+    { id: 'event', label: 'イベント' },
+    { id: 'other', label: 'その他' },
+  ];
+  const DEFAULT_QUEST_TYPE = QUEST_TYPES[2].id;
   const DEFAULT_QUESTS = [
-    { id: 'quest-1786719983301-qtlbaf', name: 'ノマ: 烈火', experience: 720 },
-    { id: 'quest-1786720011935-iyrtka', name: 'ノマ: 緑陰', experience: 840 },
-    { id: 'quest-1786720037863-i09dlk', name: 'ノマ: 蒼海', experience: 960 },
-    { id: 'quest-1786720068267-aqrhjn', name: 'ノマ: 黄金', experience: 1080 },
-    { id: 'quest-1786720090889-zgajpz', name: 'ノマ: 紫黒', experience: 1200 },
-    { id: 'quest-1786720158653-o6q7os', name: 'ノマ: 樹海', experience: 1800 },
-    { id: 'quest-1786720178696-tu06u5', name: 'ノマ: 極寒', experience: 1900 },
-    { id: 'quest-1786720216757-32wr8a', name: 'ノマ: 宵闇', experience: 2100 },
-    { id: 'quest-1786720244813-qiduzz', name: 'ノマ: 強風', experience: 3200 },
-    { id: 'quest-1786720264426-88a3wt', name: 'ノマ: 突進', experience: 3300 },
-    { id: 'quest-1786720286299-qp80ae', name: 'ノマ: 反撃', experience: 3500 },
-    { id: 'quest-1786720302304-v29xcg', name: 'ノマ: 能力封じ', experience: 3600 },
-    { id: 'quest-1786720374457-wlef24', name: 'ノマ: 砦シリーズ', experience: 4500 },
-    { id: 'quest-1786720429140-2tc992', name: 'ノマ: 秘境シリーズ', experience: 5200 },
-    { id: 'quest-1786720458390-k7u3nx', name: 'ノマ: 迷宮シリーズ', experience: 7000 },
-    { id: 'quest-1786720505711-4v3l7l', name: 'ノマ: 魔殿シリーズ', experience: 10000 },
-    { id: 'quest-1786720544038-9vw7oy', name: 'ノマ: 険所シリーズ', experience: 15000 },
-    { id: 'quest-1786720577751-brzy16', name: 'ノマ: 魔境シリーズ', experience: 20000 },
-    { id: 'quest-1786720614940-evknhz', name: 'ノマ: 危地シリーズ', experience: 40000 },
+    { id: 'quest-1786719983301-qtlbaf', type: 'normal', name: '烈火', experience: 720 },
+    { id: 'quest-1786720011935-iyrtka', type: 'normal', name: '緑陰', experience: 840 },
+    { id: 'quest-1786720037863-i09dlk', type: 'normal', name: '蒼海', experience: 960 },
+    { id: 'quest-1786720068267-aqrhjn', type: 'normal', name: '黄金', experience: 1080 },
+    { id: 'quest-1786720090889-zgajpz', type: 'normal', name: '紫黒', experience: 1200 },
+    { id: 'quest-1786720158653-o6q7os', type: 'normal', name: '樹海', experience: 1800 },
+    { id: 'quest-1786720178696-tu06u5', type: 'normal', name: '極寒', experience: 1900 },
+    { id: 'quest-1786720216757-32wr8a', type: 'normal', name: '宵闇', experience: 2100 },
+    { id: 'quest-1786720244813-qiduzz', type: 'normal', name: '強風', experience: 3200 },
+    { id: 'quest-1786720264426-88a3wt', type: 'normal', name: '突進', experience: 3300 },
+    { id: 'quest-1786720286299-qp80ae', type: 'normal', name: '反撃', experience: 3500 },
+    { id: 'quest-1786720302304-v29xcg', type: 'normal', name: '能力封じ', experience: 3600 },
+    { id: 'quest-1786720374457-wlef24', type: 'normal', name: '砦シリーズ', experience: 4500 },
+    { id: 'quest-1786720429140-2tc992', type: 'normal', name: '秘境シリーズ', experience: 5200 },
+    { id: 'quest-1786720458390-k7u3nx', type: 'normal', name: '迷宮シリーズ', experience: 7000 },
+    { id: 'quest-1786720505711-4v3l7l', type: 'normal', name: '魔殿シリーズ', experience: 10000 },
+    { id: 'quest-1786720544038-9vw7oy', type: 'normal', name: '険所シリーズ', experience: 15000 },
+    { id: 'quest-1786720577751-brzy16', type: 'normal', name: '魔境シリーズ', experience: 20000 },
+    { id: 'quest-1786720614940-evknhz', type: 'normal', name: '危地シリーズ', experience: 40000 },
+    { id: 'quest-default-normal-001', type: 'normal', name: '初陣（火）', experience: 45 },
+    { id: 'quest-default-normal-002', type: 'normal', name: '初陣（木）', experience: 50 },
+    { id: 'quest-default-normal-003', type: 'normal', name: '初陣（水）', experience: 55 },
+    { id: 'quest-default-event-001', type: 'event', name: '中級', experience: 500 },
+    { id: 'quest-default-event-002', type: 'event', name: '上級', experience: 1000 },
+    { id: 'quest-default-event-003', type: 'event', name: '極', experience: 1500 },
+    { id: 'quest-default-event-004', type: 'event', name: '究極', experience: 2200 },
+    { id: 'quest-default-event-005', type: 'event', name: '超絶・爆絶', experience: 3700 },
+    { id: 'quest-default-other-001', type: 'other', name: '強化進化クエスト（上級）', experience: 1000 },
+    { id: 'quest-default-other-002', type: 'other', name: '神殿', experience: 3700 },
+    { id: 'quest-default-other-003', type: 'other', name: '経験値たんまり！タスの巣窟', experience: 315000 },
+    { id: 'quest-default-other-004', type: 'other', name: '大量発生？タス亀強化祭', experience: 10000 },
   ];
   const DEFAULT_QUEST_ID_SET = new Set(DEFAULT_QUESTS.map((quest) => quest.id));
 
@@ -98,7 +116,7 @@
       key: 'register',
       label: 'クエスト登録',
       title: 'クエストを追加',
-      description: 'クエスト名と基礎経験値をブラウザへ保存します。',
+      description: 'クエスト名と基礎経験値を登録できます。',
     },
     {
       key: 'list',
@@ -120,7 +138,11 @@
     errorMessage: '',
     successMessage: '',
     newQuestName: '',
+    newQuestType: QUEST_TYPES[0].id,
     newQuestExperience: '',
+    listTypeDraft: QUEST_TYPES[0].id,
+    listFilterType: '',
+    listFilterApplied: false,
     selectedQuestId: '',
     editingQuestId: '',
     questDraft: null,
@@ -166,13 +188,35 @@
     return DEFAULT_QUEST_ID_SET.has(questId);
   }
 
+  function isValidQuestType(type) {
+    return QUEST_TYPES.some((item) => item.id === type);
+  }
+
+  function getQuestTypeLabel(type) {
+    return QUEST_TYPES.find((item) => item.id === type)?.label ?? 'その他';
+  }
+
+  function sortQuests(quests) {
+    return [...quests].sort((left, right) => {
+      if (left.experience !== right.experience) {
+        return left.experience - right.experience;
+      }
+
+      return left.name.localeCompare(right.name, 'ja');
+    });
+  }
+
   function buildQuestList(customQuests) {
     const defaults = DEFAULT_QUESTS.map((quest) => ({ ...quest, locked: true }));
     const custom = customQuests
       .filter((quest) => !isDefaultQuestId(quest.id))
-      .map((quest) => ({ ...quest, locked: false }));
+      .map((quest) => ({
+        ...quest,
+        type: isValidQuestType(quest.type) ? quest.type : DEFAULT_QUEST_TYPE,
+        locked: false,
+      }));
 
-    return [...defaults, ...custom];
+    return sortQuests([...defaults, ...custom]);
   }
 
   function resetMessages() {
@@ -211,6 +255,7 @@
       const customQuests = parsed
         .map((item) => ({
           id: typeof item.id === 'string' ? item.id : createId('quest'),
+          type: typeof item.type === 'string' ? item.type : DEFAULT_QUEST_TYPE,
           name: typeof item.name === 'string' ? item.name : '',
           experience: Number(item.experience),
         }))
@@ -228,6 +273,7 @@
       .filter((quest) => !isDefaultQuestId(quest.id))
       .map((quest) => ({
         id: quest.id,
+        type: quest.type,
         name: quest.name,
         experience: quest.experience,
       }));
@@ -248,9 +294,14 @@
     }
   }
 
-  function validateQuest(name, experience) {
+  function validateQuest(name, experience, type) {
     const normalizedName = String(name || '').trim();
     const normalizedExperience = Number(experience);
+    const normalizedType = isValidQuestType(type) ? type : '';
+
+    if (!normalizedType) {
+      throw new Error('タイプを選択してください。');
+    }
 
     if (!normalizedName) {
       throw new Error('クエスト名を入力してください。');
@@ -261,6 +312,7 @@
     }
 
     return {
+      type: normalizedType,
       name: normalizedName,
       experience: normalizedExperience,
     };
@@ -489,9 +541,17 @@
   }
 
   function renderRegisterTab() {
+    const typeOptions = QUEST_TYPES.map(
+      (type) => `<option value="${escapeHtml(type.id)}" ${type.id === state.newQuestType ? 'selected' : ''}>${escapeHtml(type.label)}</option>`,
+    ).join('');
+
     return `
       <section class="panel form-panel">
         <form class="quest-form" data-form="create-quest">
+          <label>
+            <span>タイプ</span>
+            <select name="type" class="short-type-select">${typeOptions}</select>
+          </label>
           <label>
             <span>クエスト名</span>
             <input name="name" value="${escapeHtml(state.newQuestName)}" placeholder="例: クエスト1" />
@@ -506,17 +566,17 @@
     `;
   }
 
-  function renderQuestListPanel() {
-    if (state.quests.length === 0) {
+  function renderQuestListPanel(visibleQuests) {
+    if (visibleQuests.length === 0) {
       return `
         <section class="panel">
           <h3>クエスト一覧</h3>
-          <p class="empty-state">登録済みクエストはありません。</p>
+          <p class="empty-state">このタイプのクエストはありません。</p>
         </section>
       `;
     }
 
-    const rows = state.quests
+    const rows = visibleQuests
       .map((quest) => {
         const isEditing = state.editingQuestId === quest.id && state.questDraft;
         const isLocked = isDefaultQuestId(quest.id);
@@ -586,8 +646,13 @@
       return '';
     }
 
+    if (state.listFilterApplied && selectedQuest.type !== state.listFilterType) {
+      return '';
+    }
+
     const selectedResult = calculateQuestExperience(selectedQuest, state.selection);
     const questOptions = state.quests
+      .filter((quest) => !state.listFilterApplied || quest.type === state.listFilterType)
       .map(
         (quest) =>
           `<option value="${escapeHtml(quest.id)}" ${quest.id === selectedQuest.id ? 'selected' : ''}>${escapeHtml(quest.name)} (${escapeHtml(
@@ -643,7 +708,29 @@
   }
 
   function renderListTab() {
-    return `<div class="stack">${renderQuestListPanel()}${renderCalculatorPanel()}</div>`;
+    const typeOptions = QUEST_TYPES.map(
+      (type) => `<option value="${escapeHtml(type.id)}" ${type.id === state.listTypeDraft ? 'selected' : ''}>${escapeHtml(type.label)}</option>`,
+    ).join('');
+    const visibleQuests = state.listFilterApplied
+      ? state.quests.filter((quest) => quest.type === state.listFilterType)
+      : [];
+
+    return `
+      <div class="stack">
+        <section class="panel form-panel">
+          <form class="quest-form inline" data-form="list-filter">
+            <label>
+              <span>表示するタイプ</span>
+              <select name="list-type">${typeOptions}</select>
+            </label>
+            <button type="submit" class="primary-button list-filter-submit">決定</button>
+          </form>
+          ${state.listFilterApplied ? '' : '<p class="empty-state">タイプを選んで決定するとクエスト一覧を表示します。</p>'}
+        </section>
+        ${state.listFilterApplied ? renderQuestListPanel(visibleQuests) : ''}
+        ${state.listFilterApplied ? renderCalculatorPanel() : ''}
+      </div>
+    `;
   }
 
   function renderSearchConstraints() {
@@ -701,7 +788,7 @@
                   .map(
                     (entry) => `
                       <div class="match-entry">
-                        <span>${escapeHtml(entry.quest.name)}: ${escapeHtml(formatExperience(entry.total))} 経験値</span>
+                        <span>${escapeHtml(getQuestTypeLabel(entry.quest.type))} / ${escapeHtml(entry.quest.name)}: ${escapeHtml(formatExperience(entry.total))} 経験値</span>
                         <span>基礎経験値: ${escapeHtml(formatExperience(entry.quest.experience))}</span>
                         <span>合計倍率: ${escapeHtml(String(entry.product))}倍</span>
                         <small>${escapeHtml(selectionSummary(entry))}</small>
@@ -793,7 +880,7 @@
               <p class="eyebrow">${escapeHtml(tabInfo.label)}</p>
               <h2>${escapeHtml(tabInfo.title)}</h2>
             </div>
-            <button type="button" class="secondary-button" data-action="reload-storage">再読み込み</button>
+            <button type="button" class="secondary-button" data-action="reset-view">リセット</button>
           </header>
           ${renderMessages()}
           ${renderTabContents()}
@@ -804,20 +891,23 @@
 
   function handleCreateQuest(form) {
     resetMessages();
+    const type = form.elements.type.value;
     const name = form.elements.name.value;
     const experience = form.elements.experience.value;
 
     try {
-      const normalized = validateQuest(name, experience);
-      state.quests.push({
+      const normalized = validateQuest(name, experience, type);
+      state.quests = sortQuests([...state.quests, {
         id: createId('quest'),
+        type: normalized.type,
         name: normalized.name,
         experience: normalized.experience,
-      });
+        locked: false,
+      }]);
       writeQuestsToStorage();
+      state.newQuestType = QUEST_TYPES[0].id;
       state.newQuestName = '';
       state.newQuestExperience = '';
-      state.activeTab = 'list';
       setSuccess('クエストを登録しました。');
     } catch (error) {
       setError(error instanceof Error ? error.message : 'クエスト登録に失敗しました。');
@@ -867,10 +957,11 @@
     resetMessages();
 
     try {
-      const normalized = validateQuest(state.questDraft.name, state.questDraft.experience);
-      state.quests = state.quests.map((quest) =>
+      const originalQuest = state.quests.find((quest) => quest.id === questId);
+      const normalized = validateQuest(state.questDraft.name, state.questDraft.experience, originalQuest?.type);
+      state.quests = sortQuests(state.quests.map((quest) =>
         quest.id === questId ? { ...quest, name: normalized.name, experience: normalized.experience } : quest,
-      );
+      ));
       writeQuestsToStorage();
       state.editingQuestId = '';
       state.questDraft = null;
@@ -920,12 +1011,40 @@
     render();
   }
 
-  function reloadStorage() {
+  function resetView() {
     resetMessages();
     loadQuests();
-    if (state.activeTab === 'list') {
-      state.selection = { ...defaultSelection };
+    state.activeTab = 'register';
+    state.newQuestType = QUEST_TYPES[0].id;
+    state.newQuestName = '';
+    state.newQuestExperience = '';
+    state.listTypeDraft = QUEST_TYPES[0].id;
+    state.listFilterType = '';
+    state.listFilterApplied = false;
+    state.selectedQuestId = '';
+    state.editingQuestId = '';
+    state.questDraft = null;
+    state.selection = { ...defaultSelection };
+    state.targetExperience = '';
+    state.searchConstraints = [];
+    state.matchResults = [];
+    state.matchSearched = false;
+    render();
+  }
+
+  function applyListFilter(type) {
+    if (!isValidQuestType(type)) {
+      setError('表示タイプを選択してください。');
+      render();
+      return;
     }
+
+    resetMessages();
+    state.listFilterType = type;
+    state.listFilterApplied = true;
+    state.selectedQuestId = '';
+    state.editingQuestId = '';
+    state.questDraft = null;
     render();
   }
 
@@ -955,7 +1074,14 @@
     const tab = target.closest('[data-tab]');
     if (tab) {
       resetMessages();
-      state.activeTab = tab.getAttribute('data-tab') || 'register';
+      const nextTab = tab.getAttribute('data-tab') || 'register';
+      state.activeTab = nextTab;
+      if (nextTab === 'list') {
+        state.listFilterApplied = false;
+        state.selectedQuestId = '';
+        state.editingQuestId = '';
+        state.questDraft = null;
+      }
       render();
       return;
     }
@@ -1013,8 +1139,8 @@
       return;
     }
 
-    if (action === 'reload-storage') {
-      reloadStorage();
+    if (action === 'reset-view') {
+      resetView();
       return;
     }
 
@@ -1036,6 +1162,11 @@
 
     if (target instanceof HTMLInputElement && target.name === 'name') {
       state.newQuestName = target.value;
+      return;
+    }
+
+    if (target instanceof HTMLSelectElement && target.name === 'type') {
+      state.newQuestType = target.value;
       return;
     }
 
@@ -1062,6 +1193,16 @@
   app.addEventListener('change', (event) => {
     const target = event.target;
     if (!(target instanceof HTMLElement)) {
+      return;
+    }
+
+    if (target instanceof HTMLSelectElement && target.name === 'type') {
+      state.newQuestType = target.value;
+      return;
+    }
+
+    if (target instanceof HTMLSelectElement && target.name === 'list-type') {
+      state.listTypeDraft = target.value;
       return;
     }
 
@@ -1120,6 +1261,11 @@
 
     if (target.getAttribute('data-form') === 'create-quest') {
       handleCreateQuest(target);
+      return;
+    }
+
+    if (target.getAttribute('data-form') === 'list-filter') {
+      applyListFilter(target.elements['list-type'].value);
       return;
     }
 
