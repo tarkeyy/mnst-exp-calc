@@ -1,6 +1,6 @@
 (() => {
   const STORAGE_KEY = 'mnst.questcalc.web.quests.v1';
-  const MAX_SEARCH_CONSTRAINTS = 3;
+  const MAX_SEARCH_CONSTRAINTS = 5;
   const DEFAULT_QUESTS = [
     { id: 'quest-1786719983301-qtlbaf', name: 'ノマ: 烈火', experience: 720 },
     { id: 'quest-1786720011935-iyrtka', name: 'ノマ: 緑陰', experience: 840 },
@@ -729,7 +729,7 @@
                   state.searchConstraints.length >= MAX_SEARCH_CONSTRAINTS ? 'disabled' : ''
                 }>追加</button>
               </div>
-              <small class="constraints-note">未指定なら全倍率が対象。追加は最大3件です。</small>
+              <small class="constraints-note">未指定なら全倍率が対象。追加は最大5件です。</small>
               ${renderSearchConstraints()}
             </div>
             <label>
@@ -770,7 +770,7 @@
           <div>
             <p class="eyebrow">mnst quest calc web</p>
             <h1>モンスト経験値Web版</h1>
-            <p class="sidebar-copy">サーバー不要。クエスト登録と経験値計算をブラウザだけで完結します。</p>
+
           </div>
           <nav class="tab-list" aria-label="画面選択">
             ${tabs
