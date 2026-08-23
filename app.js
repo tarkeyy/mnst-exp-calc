@@ -148,6 +148,7 @@
     questDraft: null,
     selection: { ...defaultSelection },
     targetExperience: '',
+    excludedQuestIds: [],
     searchConstraints: [],
     matchResults: [],
     matchSearched: false,
@@ -400,12 +401,14 @@
   function buildCandidateResults(targetExperience, constraints) {
     const normalizedTarget = normalizeExperience(targetExperience);
     const validSelections = selectionCombinations.filter((selection) => matchesConstraints(selection, constraints));
+    const excludedIds = new Set(state.excludedQuestIds);
+    const searchableQuests = state.quests.filter((quest) => !excludedIds.has(quest.id));
 
     if (validSelections.length === 0) {
       return [];
     }
 
-    return state.quests.flatMap((quest) =>
+    return searchableQuests.flatMap((quest) =>
       validSelections
         .map((selection) => buildCalculationResult(quest, selection))
         .filter((result) => result.total <= normalizedTarget),
@@ -805,6 +808,16 @@
   }
 
   function renderSearchTab() {
+    const excludedIds = new Set(state.excludedQuestIds);
+    const exclusionOptions = state.quests
+      .map(
+        (quest) =>
+          `<option value="${escapeHtml(quest.id)}" ${excludedIds.has(quest.id) ? 'selected' : ''}>${escapeHtml(
+            `${getQuestTypeLabel(quest.type)} / ${quest.name} (${formatExperience(quest.experience)})`,
+          )}</option>`,
+      )
+      .join('');
+
     return `
       <div class="stack">
         <section class="panel form-panel">
@@ -819,6 +832,13 @@
               <small class="constraints-note">未指定なら全倍率が対象。追加は最大5件です。</small>
               ${renderSearchConstraints()}
             </div>
+            <label class="full-width">
+              <span>除外クエスト</span>
+              <select name="exclude-quests" class="exclude-quests-select" multiple>
+                ${exclusionOptions}
+              </select>
+              <small class="constraints-note">選択したクエストは検索候補から除外されます（Ctrl/Shiftで複数選択）。</small>
+            </label>
             <label>
               <span>目標経験値</span>
               <input name="target-experience" type="number" min="0" step="0.01" value="${escapeHtml(
@@ -992,6 +1012,8 @@
       state.questDraft = null;
     }
 
+    state.excludedQuestIds = state.excludedQuestIds.filter((id) => id !== questId);
+
     writeQuestsToStorage();
     setSuccess('クエストを削除しました。');
     render();
@@ -1026,6 +1048,7 @@
     state.questDraft = null;
     state.selection = { ...defaultSelection };
     state.targetExperience = '';
+    state.excludedQuestIds = [];
     state.searchConstraints = [];
     state.matchResults = [];
     state.matchSearched = false;
@@ -1180,6 +1203,11 @@
       return;
     }
 
+    if (target instanceof HTMLSelectElement && target.name === 'exclude-quests') {
+      state.excludedQuestIds = Array.from(target.selectedOptions, (option) => option.value);
+      return;
+    }
+
     if (target instanceof HTMLInputElement && target.hasAttribute('data-edit-name') && state.questDraft) {
       state.questDraft.name = target.value;
       return;
@@ -1203,6 +1231,11 @@
 
     if (target instanceof HTMLSelectElement && target.name === 'list-type') {
       state.listTypeDraft = target.value;
+      return;
+    }
+
+    if (target instanceof HTMLSelectElement && target.name === 'exclude-quests') {
+      state.excludedQuestIds = Array.from(target.selectedOptions, (option) => option.value);
       return;
     }
 
