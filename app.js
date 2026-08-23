@@ -37,7 +37,7 @@
     { id: 'quest-default-event-005', type: 'event', name: '超絶・爆絶', experience: 3700 },
     { id: 'quest-default-other-001', type: 'other', name: '強化進化クエスト（上級）', experience: 1000 },
     { id: 'quest-default-other-002', type: 'other', name: '神殿', experience: 3700 },
-    { id: 'quest-default-other-003', type: 'other', name: '経験値たんまり！タスの巣窟', experience: 315000 },
+    { id: 'quest-default-other-003', type: 'other', name: '経験値たんまり！タスの巣窟', experience: 300000 },
     { id: 'quest-default-other-004', type: 'other', name: '大量発生？タス亀強化祭', experience: 10000 },
   ];
   const DEFAULT_QUEST_ID_SET = new Set(DEFAULT_QUESTS.map((quest) => quest.id));
