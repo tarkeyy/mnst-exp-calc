@@ -331,12 +331,24 @@
     return normalizeNumber(selection.reduce((sum, current) => sum * current.option.value, 1));
   }
 
+  function calculateTotalExperience(experience, selection) {
+    const multiSelection = selection.find(({ group }) => group.key === 'multi');
+    const otherProduct = normalizeNumber(
+      selection
+        .filter(({ group }) => group.key !== 'multi')
+        .reduce((product, current) => product * current.option.value, 1),
+    );
+    const totalBeforeMulti = normalizeExperience(experience * otherProduct);
+
+    return normalizeExperience(totalBeforeMulti * (multiSelection?.option.value ?? 1));
+  }
+
   function buildCalculationResult(quest, selection) {
     const product = buildSelectionProduct(selection);
 
     return {
       quest,
-      total: normalizeExperience(quest.experience * product),
+      total: calculateTotalExperience(quest.experience, selection),
       product,
       breakdown: buildBreakdown(selection),
     };
